@@ -44,16 +44,15 @@ main()
     time_Init(&t2, 3, 45);
 
     assert( 285 == time_Difference( &t1, &t2 ) );
-    assert( -285 == time_Difference( &t2, &t1 ) );
 
 
     /* time_Add */
     time_Init(&t1, 3, 45);
     time_Init(&t2, 8, 30);
 
-    time_Add(&t1, 285);
+    Time t = time_Add(&t1, 285);
 
-    assert( time_Equal( &t1, &t2 ) );
+    assert( time_Equal( &t, &t2 ) );
 
 
     /* dt_Overlap */

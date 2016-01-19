@@ -153,8 +153,7 @@ void dt_SetDuration(DaTime *d, int mins)
 	fprintf(stderr,"\tEnter dt_SetDuration\n");
 	#endif
 
-        d->end = d->start;
-        time_Add(&d->end, mins);
+        d->end = time_Add(&d->start, mins);
 
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit dt_SetDuration\n");
@@ -401,5 +400,8 @@ int dt_Difference(DaTime *a, DaTime *b)
 	fprintf(stderr, "\tExit dt_Difference\n");
 	#endif
 
-        return time_Difference(&a->start, &b->start);
+        int ret = charToDay(b->day)*60 - charToDay(a->day)*60
+               + time_Difference(&a->start, &b->start);
+
+        return ret >= 0 ? ret : -ret;
 }

@@ -142,7 +142,7 @@ Boolean time_Equal(Time *a, Time *b)
 	fprintf(stderr, "\tEnter time_Equal\n");
 	#endif
 
-        return (a->hour == b->hour) && (a->minute && b->minute);
+        return (a->hour == b->hour) && (a->minute == b->minute);
 
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit time_Equal\n");
@@ -224,13 +224,16 @@ Time time_Add(Time *a, int minutes)
 	fprintf(stderr, "\tEnter time_Add\n");
 	#endif
 
-        a->minute += minutes;
-        a->hour += a->minute/60;
-        a->minute %= 60;
+        Time t = *a;
+        t.minute += minutes;
+        t.hour += t.minute/60;
+        t.minute %= 60;
 
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit time_Add\n");
 	#endif
+        
+        return t;
 }
 
 int time_Difference(Time *a, Time *b)
@@ -246,7 +249,9 @@ int time_Difference(Time *a, Time *b)
 	#endif
 
         int minutes = a->hour*60 + a->minute;
-        return minutes - b->hour*60 - b->minute;
+        int ret = minutes - b->hour*60 - b->minute;
+        
+        return ret >= 0 ? ret : -ret;
 }
 
 
