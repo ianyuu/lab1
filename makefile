@@ -1,6 +1,6 @@
 
 CC = gcc
-CFLAGS = -ansi
+CFLAGS = -ansi -g
 
 datest: driver.o datime.o time.o common.o
 	$(CC) -o datest driver.o datime.o time.o common.o
