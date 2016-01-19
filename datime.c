@@ -12,6 +12,7 @@
 
 
 #include <stdio.h>
+#include <assert.h>
 #include "datime.h"
 #include "time.h"
 #include "common.h"
@@ -102,7 +103,7 @@ int dt_GetDuration(DaTime *d)
 	fprintf(stderr,"\tExecute dt_GetDuration\n");
 	#endif
 
-        return d->duration;
+        return time_Difference(&d->end, &d->start);
 }
 
 
@@ -152,6 +153,9 @@ void dt_SetDuration(DaTime *d, int mins)
 	fprintf(stderr,"\tEnter dt_SetDuration\n");
 	#endif
 
+        d->end = d->start;
+        time_Add(&d->end, mins);
+
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit dt_SetDuration\n");
 	#endif
@@ -194,6 +198,18 @@ void dt_Display(DaTime *d)
 	#endif
 }
 
+int charToDay(Day c) {
+   switch(c) {
+        case 'u': return 0;
+        case 'm':  return 1;
+        case 't':  return 2;
+        case 'w':  return 3;
+        case 'r':  return 4;
+        case 'f':  return 5;
+        case 's':  return 6;
+        default: assert(0);
+    }
+}
 
 /* Comparison functions  */
 Boolean dt_Equal(DaTime *a, DaTime *b)
@@ -205,6 +221,10 @@ Boolean dt_Equal(DaTime *a, DaTime *b)
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit dt_Equal\n");
 	#endif
+
+        return charToDay(a->day) == charToDay(b->day) &&
+               time_Equal( &a->start, &b->start );
+
 }
 
 Boolean dt_NotEqual(DaTime *a, DaTime *b)
@@ -216,6 +236,8 @@ Boolean dt_NotEqual(DaTime *a, DaTime *b)
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit dt_NotEqual\n");
 	#endif
+
+        return !dt_Equal(a, b);
 }
 
 Boolean dt_LessThan(DaTime *a, DaTime *b)
@@ -227,6 +249,8 @@ Boolean dt_LessThan(DaTime *a, DaTime *b)
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit dt_LessThan\n");
 	#endif
+
+        return !dt_Equal(a, b) && dt_LessThanOrEqual(a, b);
 }
 
 Boolean dt_GreaterThan(DaTime *a, DaTime *b)
@@ -238,6 +262,8 @@ Boolean dt_GreaterThan(DaTime *a, DaTime *b)
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit dt_GreaterThan\n");
 	#endif
+
+        return !dt_LessThanOrEqual(a, b);
 }
 
 Boolean dt_LessThanOrEqual(DaTime *a, DaTime *b)
@@ -249,6 +275,10 @@ Boolean dt_LessThanOrEqual(DaTime *a, DaTime *b)
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit dt_LessThanOrEqual\n");
 	#endif
+
+        if (charToDay(b->day) < charToDay(a->day)) return 0;
+        if (time_LessThan(&b->start, &a->end)) return 0;
+        return 1;
 }
 
 Boolean dt_GreaterThanOrEqual(DaTime *a, DaTime *b)
@@ -260,6 +290,8 @@ Boolean dt_GreaterThanOrEqual(DaTime *a, DaTime *b)
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit dt_GreaterThanOrEqual\n");
 	#endif
+
+        return !dt_LessThan(a, b);
 }
 
 Boolean dt_Overlap(DaTime *a, DaTime *b)
@@ -271,6 +303,13 @@ Boolean dt_Overlap(DaTime *a, DaTime *b)
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit dt_Overlap\n");
 	#endif
+
+        Boolean less_than = dt_LessThan(a, b);
+
+        DaTime* first = less_than ? a : b;
+        DaTime* last = less_than ? b : a;
+
+        return time_GreaterThan(&first->end, &last->start);
 }
 
 Boolean dt_NonOverlap(DaTime *a, DaTime *b)
@@ -282,6 +321,8 @@ Boolean dt_NonOverlap(DaTime *a, DaTime *b)
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit dt_NonOverlap\n");
 	#endif
+        
+        return !dt_Overlap(a, b);
 }
 
 
@@ -295,6 +336,8 @@ void dt_ChangeDay(DaTime *d, Day day)
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit dt_ChangeDay\n");
 	#endif
+
+        d->day = day;
 }
 
 void dt_ChangeDuration(DaTime *d, int dur)
@@ -306,6 +349,9 @@ void dt_ChangeDuration(DaTime *d, int dur)
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit dt_ChangeDuration\n");
 	#endif
+
+        d->end = d->start;
+        time_Add(&d->start, dur);
 }
 
 void dt_ChangeStart(DaTime *d, Time newstart)
@@ -317,6 +363,8 @@ void dt_ChangeStart(DaTime *d, Time newstart)
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit dt_ChangeStart\n");
 	#endif
+
+        d->start = newstart;
 }
 
 
@@ -352,7 +400,6 @@ int dt_Difference(DaTime *a, DaTime *b)
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit dt_Difference\n");
 	#endif
+
+        return time_Difference(&a->start, &b->start);
 }
-
-
-

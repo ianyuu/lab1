@@ -56,6 +56,23 @@ main()
     assert( time_Equal( &t1, &t2 ) );
 
 
+    /* dt_Overlap */
+    time_Init(&t1, 1, 30);
+    time_Init(&t2, 2, 45);
+    dt_Init(&a, 'm', t1, t2);
+
+    time_Init(&t3, 2, 30);
+    time_Init(&t4, 3, 45);
+    dt_Init(&b, 'm', t3, t4);
+
+    assert( dt_Overlap(&a, &b) );
+
+    time_Init(&t1, 1, 30);
+    time_Init(&t2, 2, 10);
+    dt_Init(&a, 'm', t1, t2);
+
+    assert( !dt_Overlap(&a, &b) );
+
     printf("Tests passed\n");
 
 /*

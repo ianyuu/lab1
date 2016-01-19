@@ -155,11 +155,12 @@ Boolean time_NotEqual(Time *a, Time *b)
 	fprintf(stderr, "\tEnter time_NotEqual\n");
 	#endif
 
-        return !time_Equal(a, b);
 
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit time_NotEqual\n");
 	#endif
+
+        return !time_Equal(a, b);
 }
 
 Boolean time_LessThan(Time *a, Time *b)
@@ -168,12 +169,11 @@ Boolean time_LessThan(Time *a, Time *b)
 	fprintf(stderr, "\tEnter time_LessThan\n");
 	#endif
 
-        return (a->hour < b->hour) || (a->minute < b->minute);
-
-
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit time_LessThan\n");
 	#endif
+
+        return time_LessThanOrEqual(a, b) && !time_Equal(a, b);
 }
 
 Boolean time_GreaterThan(Time *a, Time *b)
@@ -182,11 +182,11 @@ Boolean time_GreaterThan(Time *a, Time *b)
 	fprintf(stderr, "\tEnter time_GreaterThan\n");
 	#endif
 
-        return !time_LessThanOrEqual(a, b);
-
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit time_GreaterThan\n");
 	#endif
+
+        return !time_LessThanOrEqual(a, b);
 }
 
 Boolean time_LessThanOrEqual(Time *a, Time *b)
@@ -195,7 +195,9 @@ Boolean time_LessThanOrEqual(Time *a, Time *b)
 	fprintf(stderr, "\tEnter time_LessThanOrEqual\n");
 	#endif
 
-        return time_Equal(a, b) || time_LessThan(a, b);
+        if (a->hour > b->hour) return 0;
+        if (a->minute > b->minute) return 0;
+        return 1;
 
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit time_LessThanOrEqual\n");
@@ -208,11 +210,11 @@ Boolean time_GreaterThanOrEqual(Time *a, Time *b)
 	fprintf(stderr, "\tEnter time_GreaterThanOrEqual\n");
 	#endif
 
-        return !time_LessThan(a, b);
-
 	#ifdef DEBUG
 	fprintf(stderr, "\tExit time_GreaterThanOrEqual\n");
 	#endif
+ 
+        return time_Equal(a, b) || time_GreaterThan(a, b);
 }
 
 /* Manipulation functions  */
