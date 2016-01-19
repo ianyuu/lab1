@@ -14,12 +14,51 @@
 #include <stdio.h>
 #include "datime.h"
 #include "time.h"
+#include <assert.h>
 
 main()
 {
    Time t1, t2, t3, t4, t5;
    DaTime a, b, c, d, e;
 
+
+    /* time_Equal */
+    time_Init(&t1, 3, 30);
+    time_Init(&t2, 3, 30);
+    time_Init(&t3, 4, 30);
+
+    assert( time_Equal(&t1, &t2) );
+    assert( !time_Equal(&t1, &t3) );
+ 
+
+    /* time_NotEqual */
+    time_Init(&t1, 3, 30);
+    time_Init(&t2, 3, 30);
+    time_Init(&t3, 4, 30);
+
+    assert( time_NotEqual(&t1, &t3) );
+    assert( !time_NotEqual(&t1, &t2) );
+
+    /* time_Difference */
+    time_Init(&t1, 8, 30);
+    time_Init(&t2, 3, 45);
+
+    assert( 285 == time_Difference( &t1, &t2 ) );
+    assert( -285 == time_Difference( &t2, &t1 ) );
+
+
+    /* time_Add */
+    time_Init(&t1, 3, 45);
+    time_Init(&t2, 8, 30);
+
+    time_Add(&t1, 285);
+
+    assert( time_Equal( &t1, &t2 ) );
+
+
+    printf("Tests passed\n");
+
+/*
 	time_Init(&t1, 11, 30);
 	time_Init(&t2, 12, 20);
 	time_InitSingle(&t3, 300);
@@ -36,5 +75,5 @@ main()
 	dt_Display(&d);
 	e = dt_Merge(&d, &b);
 	dt_Display(&e);
-
+*/
 }
