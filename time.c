@@ -1,257 +1,101 @@
-
 /*
- *  File:  time.c
- *  Name:
- *  login: 
- *  Date:  25 Aug 07
- *  Mod:
- */
+*  File:  time.c
+*  Name:
+*  login: 
+*  Date:  25 Aug 07
+*  Mod:
+*/
 
 /*  Implementation of Time data type operations
- */
-
+*/
 
 #include <stdio.h>
 #include "time.h"
 #include "common.h"
 
-/*
-#define DEBUG
-*/
-
 /* Initialization functions   */
-void time_Init(Time *t, int hour, int minute)
-{
-	#ifdef DEBUG
-	fprintf(stderr, "\tEnter time_Init\n");
-	#endif
-
-	time_SetHour(t, hour);
-	time_SetMinute(t, minute);
-
-	#ifdef DEBUG
-	fprintf(stderr, "\tExit time_Init\n");
-	#endif
+void time_Init(Time *t, int hour, int minute) {
+    time_SetHour(t, hour);
+    time_SetMinute(t, minute);
 }
 
-void time_InitSingle(Time *t, int hrmin)
-{
-	#ifdef DEBUG
-	fprintf(stderr, "\tEnter time_InitSingle\n");
-	#endif
-
-	time_SetHour(t, hrmin/100);
-	time_SetMinute(t, hrmin%100);
-
-	#ifdef DEBUG
-	fprintf(stderr, "\tExit time_InitSingle\n");
-	#endif
+void time_InitSingle(Time *t, int hrmin) {
+    time_SetHour(t, hrmin/100);
+    time_SetMinute(t, hrmin%100);
 }
 
-void time_Clear(Time *t)
-{
-	#ifdef DEBUG
-	fprintf(stderr, "\tEnter time_Clear\n");
-	#endif
-
-	time_SetHour(t, 0);
-	time_SetMinute(t, 0);
-
-	#ifdef DEBUG
-	fprintf(stderr, "\tExit time_Clear\n");
-	#endif
+void time_Clear(Time *t) {
+    time_SetHour(t, 0);
+    time_SetMinute(t, 0);
 }
 
-void time_Copy(Time *dest, Time *source)
-{
-	#ifdef DEBUG
-	fprintf(stderr, "\tEnter time_Copy\n");
-	#endif
-
-        *source = *dest;
-
-	#ifdef DEBUG
-	fprintf(stderr, "\tExit time_Copy\n");
-	#endif
+void time_Copy(Time *dest, Time *source) {
+    *source = *dest;
 }
 
 /* Accessor functions  */
-int time_GetHour(Time *t)
-{
-	#ifdef DEBUG
-	fprintf(stderr, "\tExecute time_GetHour\n");
-	#endif
-
-	return t->hour;
+int time_GetHour(Time *t) {
+    return t->hour;
 }
 
-int time_GetMinute(Time *t)
-{
-	#ifdef DEBUG
-	fprintf(stderr, "\tExecute time_GetMinute\n");
-	#endif
-
-	return t->minute;
+int time_GetMinute(Time *t) {
+    return t->minute;
 }
 
 /* Mutator functions  */
-void time_SetHour(Time *t, int hour)
-{
-	#ifdef DEBUG
-	fprintf(stderr, "\tEnter time_SetHour\n");
-	#endif
-
-	t->hour = hour;
-
-	#ifdef DEBUG
-	fprintf(stderr, "\tExit time_SetHour\n");
-	#endif
+void time_SetHour(Time *t, int hour) {
+    t->hour = hour;
 }
 
-void time_SetMinute(Time *t, int min)
-{
-	#ifdef DEBUG
-	fprintf(stderr, "\tEnter time_SetMinute\n");
-	#endif
-
-	t->minute = min;
-
-	#ifdef DEBUG
-	fprintf(stderr, "\tExit time_SetMinute\n");
-	#endif
+void time_SetMinute(Time *t, int min) {
+    t->minute = min;
 }
 
 /* Display functions  */
-void time_Display(Time *t)
-{
-	#ifdef DEBUG
-	fprintf(stderr, "\tEnter time_Display\n");
-	#endif
-
-	printf("%02d:%02d", time_GetHour(t),time_GetMinute(t));
-
-	#ifdef DEBUG
-	fprintf(stderr, "\tExit time_Display\n");
-	#endif
+void time_Display(Time *t) {
+    printf("%02d:%02d", time_GetHour(t),time_GetMinute(t));
 }
 
 /* Comparison functions  */
-Boolean time_Equal(Time *a, Time *b)
-{
-	#ifdef DEBUG
-	fprintf(stderr, "\tEnter time_Equal\n");
-	#endif
-
-        return (a->hour == b->hour) && (a->minute == b->minute);
-
-	#ifdef DEBUG
-	fprintf(stderr, "\tExit time_Equal\n");
-	#endif
+Boolean time_Equal(Time *a, Time *b) {
+    return (a->hour == b->hour) && (a->minute == b->minute);
 }
 
-Boolean time_NotEqual(Time *a, Time *b)
-{
-	#ifdef DEBUG
-	fprintf(stderr, "\tEnter time_NotEqual\n");
-	#endif
-
-
-	#ifdef DEBUG
-	fprintf(stderr, "\tExit time_NotEqual\n");
-	#endif
-
-        return !time_Equal(a, b);
+Boolean time_LessThanOrEqual(Time *a, Time *b) {
+    if (a->hour > b->hour) return 0;
+    if (a->minute > b->minute) return 0;
+    return 1;
 }
 
-Boolean time_LessThan(Time *a, Time *b)
-{
-	#ifdef DEBUG
-	fprintf(stderr, "\tEnter time_LessThan\n");
-	#endif
-
-	#ifdef DEBUG
-	fprintf(stderr, "\tExit time_LessThan\n");
-	#endif
-
-        return time_LessThanOrEqual(a, b) && !time_Equal(a, b);
+Boolean time_NotEqual(Time *a, Time *b) {
+    return !time_Equal(a, b);
 }
 
-Boolean time_GreaterThan(Time *a, Time *b)
-{
-	#ifdef DEBUG
-	fprintf(stderr, "\tEnter time_GreaterThan\n");
-	#endif
-
-	#ifdef DEBUG
-	fprintf(stderr, "\tExit time_GreaterThan\n");
-	#endif
-
-        return !time_LessThanOrEqual(a, b);
+Boolean time_LessThan(Time *a, Time *b) {
+    return time_LessThanOrEqual(a, b) && !time_Equal(a, b);
 }
 
-Boolean time_LessThanOrEqual(Time *a, Time *b)
-{
-	#ifdef DEBUG
-	fprintf(stderr, "\tEnter time_LessThanOrEqual\n");
-	#endif
-
-        if (a->hour > b->hour) return 0;
-        if (a->minute > b->minute) return 0;
-        return 1;
-
-	#ifdef DEBUG
-	fprintf(stderr, "\tExit time_LessThanOrEqual\n");
-	#endif
+Boolean time_GreaterThan(Time *a, Time *b) {
+    return !time_LessThanOrEqual(a, b);
 }
 
-Boolean time_GreaterThanOrEqual(Time *a, Time *b)
-{
-	#ifdef DEBUG
-	fprintf(stderr, "\tEnter time_GreaterThanOrEqual\n");
-	#endif
-
-	#ifdef DEBUG
-	fprintf(stderr, "\tExit time_GreaterThanOrEqual\n");
-	#endif
- 
-        return time_Equal(a, b) || time_GreaterThan(a, b);
+Boolean time_GreaterThanOrEqual(Time *a, Time *b) {
+    return time_Equal(a, b) || time_GreaterThan(a, b);
 }
 
 /* Manipulation functions  */
-Time time_Add(Time *a, int minutes)
-{
-	#ifdef DEBUG
-	fprintf(stderr, "\tEnter time_Add\n");
-	#endif
+Time time_Add(Time *a, int minutes) {
+    Time t = *a;
+    t.minute += minutes;
+    t.hour += t.minute/60;
+    t.minute %= 60;
 
-        Time t = *a;
-        t.minute += minutes;
-        t.hour += t.minute/60;
-        t.minute %= 60;
-
-	#ifdef DEBUG
-	fprintf(stderr, "\tExit time_Add\n");
-	#endif
-        
-        return t;
+    return t;
 }
 
-int time_Difference(Time *a, Time *b)
-{
-	#ifdef DEBUG
-	fprintf(stderr, "\tEnter time_Difference\n");
-	#endif
+int time_Difference(Time *a, Time *b) {
+    int minutes = a->hour*60 + a->minute;
+    int ret = minutes - b->hour*60 - b->minute;
 
-        /* TODO: Return negative? */
-
-	#ifdef DEBUG
-	fprintf(stderr, "\tExit time_Difference\n");
-	#endif
-
-        int minutes = a->hour*60 + a->minute;
-        int ret = minutes - b->hour*60 - b->minute;
-        
-        return ret >= 0 ? ret : -ret;
+    return ret >= 0 ? ret : -ret;
 }
-
-
