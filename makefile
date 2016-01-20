@@ -11,7 +11,7 @@ datime.o: datime.h common.h time.h
 
 time.o: time.h common.h
 
-clean:
+clean: real_clean
 	rm -f *.o
 
 real_clean: clean
